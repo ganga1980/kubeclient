@@ -4,6 +4,8 @@ require 'faraday'
 require 'faraday_middleware'
 require 'json'
 require 'net/http'
+require "yajl/json_gem"
+require "yajl"
 
 require_relative 'kubeclient/aws_eks_credentials'
 require_relative 'kubeclient/config'
@@ -626,7 +628,7 @@ module Kubeclient
       when :raw
         body
       when :parsed
-        JSON.parse(body)
+        Yajl::Parser.parse(StringIO.new(body))
       when :parsed_symbolized
         JSON.parse(body, symbolize_names: true)
       when :ros
